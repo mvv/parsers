@@ -1,5 +1,11 @@
+{-# LANGUAGE CPP #-}
+
 module Main where
 
+#if __GLASGOW_HASKELL__ < 710
+main :: IO ()
+main = return ()
+#else
 import Build_doctests (autogen_dir, deps)
 import Control.Applicative
 import Control.Monad
@@ -28,3 +34,4 @@ getFilesAndDirectories :: FilePath -> IO ([FilePath], [FilePath])
 getFilesAndDirectories dir = do
   c <- map (dir </>) . filter (`notElem` ["..", "."]) <$> getDirectoryContents dir
   (,) <$> filterM doesDirectoryExist c <*> filterM doesFileExist c
+#endif
